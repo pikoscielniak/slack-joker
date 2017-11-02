@@ -4,23 +4,21 @@ import (
 	"time"
 	"net/http"
 	"github.com/PuerkitoBio/goquery"
-	"log"
-	"fmt"
+	"github.com/pkg/errors"
 )
 
 var netClient = &http.Client{
 	Timeout: time.Second * 10,
 }
 
-func Fetch() {
+func Fetch() (string, error) {
 	doc, err := goquery.NewDocument("https://www.dowcipy.jeja.pl/")
 	if err != nil {
-		log.Fatal(err)
+		return "", err
 	}
 	jokeDiv := doc.Find("div.dow-left-text").First()
-	if jokeDiv != nil {
-
-		joke := jokeDiv.Find("p").Text()
-		fmt.Printf("%s\n", joke)
+	if jokeDiv == nil {
+		return "", errors.New("Not found")
 	}
+	return jokeDiv.Find("p").Text(), nil
 }
