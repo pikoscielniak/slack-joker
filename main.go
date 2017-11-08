@@ -1,20 +1,11 @@
 package main
 
 import (
-	"slack-joker/fetcher"
-	"slack-joker/sender"
 	"os"
+	"slack-joker/bot"
 )
 
 func main() {
-	joke, err := fetcher.Fetch()
-	if err != nil {
-		panic(err)
-	}
-	channel := os.Args[1]
-	token := os.Args[2]
-	err = sender.SendToSlack(joke, channel, token)
-	if err != nil {
-		panic(err)
-	}
+	token := os.Getenv("SLACK_TOKEN")
+	bot.Start(token)
 }
